@@ -1,14 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pandas as pd
 import joblib
 from pathlib import Path
+import os
+import uvicorn
 
 app = FastAPI()
 
-# Build a path relative to THIS FILE's location, not the terminal's cwd
-BASE_DIR = Path(__file__).resolve().parent      # .../cbc_project/backend
-MODEL_DIR = BASE_DIR.parent / "model"             # .../cbc_project/model
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_DIR = BASE_DIR.parent / "model"
 
 model = joblib.load(MODEL_DIR / 'cbc_diagnosis_model.joblib')
 le = joblib.load(MODEL_DIR / 'label_encoder.joblib')
@@ -33,10 +42,13 @@ class CBCInput(BaseModel):
     PDW: float
     PCT: float
 
-# 2. The actual prediction endpoint
 @app.post("/predict")
 def predict(data: CBCInput):
     input_df = pd.DataFrame([data.dict()])
     pred_encoded = model.predict(input_df)
     pred_label = le.inverse_transform(pred_encoded)
     return {"diagnosis": pred_label[0]}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
