@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CBC Diagnosis Predictor</title>
+</head>
+<body>
+    <h1>CBC Diagnosis Predictor</h1>
+
+    <form id = 'cbc-form'>
+        <label>WBC: <input type ='number' step ='any' id = 'WBC'required></label><br>
+        <label>LYMp: <input type="number" step="any" id="LYMp" required></label><br>
+    <label>NEUTp: <input type="number" step="any" id="NEUTp" required></label><br>
+    <label>LYMn: <input type="number" step="any" id="LYMn" required></label><br>
+    <label>NEUTn: <input type="number" step="any" id="NEUTn" required></label><br>
+    <label>RBC: <input type="number" step="any" id="RBC" required></label><br>
+    <label>HGB: <input type="number" step="any" id="HGB" required></label><br>
+    <label>HCT: <input type="number" step="any" id="HCT" required></label><br>
+    <label>MCV: <input type="number" step="any" id="MCV" required></label><br>
+    <label>MCH: <input type="number" step="any" id="MCH" required></label><br>
+    <label>MCHC: <input type="number" step="any" id="MCHC" required></label><br>
+    <label>PLT: <input type="number" step="any" id="PLT" required></label><br>
+    <label>PDW: <input type="number" step="any" id="PDW" required></label><br>
+    <label>PCT: <input type="number" step="any" id="PCT" required></label><br>
+    <button type="submit">predict</button>
+
+</form>
+
+<h2 id="result"></h2>
+
+<script>
+  document.getElementById("cbc-form").addEventListener("submit", async function (event) {
+    event.preventDefault(); // stop the page from reloading
+
+    // 1. Collect all 14 values from the form
+    const payload = {
+      WBC: parseFloat(document.getElementById("WBC").value),
+      LYMp: parseFloat(document.getElementById("LYMp").value),
+      NEUTp: parseFloat(document.getElementById("NEUTp").value),
+      LYMn: parseFloat(document.getElementById("LYMn").value),
+      NEUTn: parseFloat(document.getElementById("NEUTn").value),
+      RBC: parseFloat(document.getElementById("RBC").value),
+      HGB: parseFloat(document.getElementById("HGB").value),
+      HCT: parseFloat(document.getElementById("HCT").value),
+      MCV: parseFloat(document.getElementById("MCV").value),
+      MCH: parseFloat(document.getElementById("MCH").value),
+      MCHC: parseFloat(document.getElementById("MCHC").value),
+      PLT: parseFloat(document.getElementById("PLT").value),
+      PDW: parseFloat(document.getElementById("PDW").value),
+      PCT: parseFloat(document.getElementById("PCT").value),
+    };
+
+    // 2. Send it to the FastAPI backend
+    const response = await fetch("http://127.0.0.1:8000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    // 3. Read the response and show it on the page
+    const result = await response.json();
+    document.getElementById("result").innerText =
+      "Predicted Diagnosis: " + result.diagnosis;
+  });
+</script>
+
+</body>
+</html>
