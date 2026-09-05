@@ -2,10 +2,15 @@
 
 An end-to-end machine learning project that predicts a blood diagnosis (Healthy, various anemia types, Leukemia, Thrombocytopenia, etc.) from a patient's Complete Blood Count (CBC) values. Built as a learning project covering the full ML lifecycle — data cleaning, model training, a FastAPI backend, and a simple web frontend.
 
+# CBC Diagnosis Predictor — Anemia & Blood Disorder Detection
+
+![CBC Diagnosis Predictor Screenshot](image.png)
+
+An end-to-end machine learning project that predicts...
+
 ## Live Demo
 
-- Frontend: _add your deployed link here_
-- API docs: _add your deployed backend URL + `/docs` here_
+- Frontend: https://syedasundas87.github.io/anemia-detection/
 
 ## Overview
 
